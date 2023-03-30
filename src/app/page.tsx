@@ -6,7 +6,7 @@ export default function Home() {
   const [signature, setSignature] = useState<SignatureCanvas | null>(null);
   const [pageIndex, setPageIndex] = useState<number>(0)
   const [pageData, setPageData] = useState<Array<Array<SignaturePad.Point>>[]>([])
-  const [trimImages, setTrimImages] = useState([])
+  const [trimImages, setTrimImages] = useState<string[]>([])
   const handleClear = () => {
     signature?.clear();
   };
@@ -22,9 +22,7 @@ export default function Home() {
      signature.fromData(pageData[pageIndex])
     }
   }, [pageData, pageIndex, signature]);
-useEffect(() => {
-  console.log(trimImages)
-},[trimImages])
+
   return (
     <div >
       <SignatureCanvas
@@ -38,7 +36,7 @@ useEffect(() => {
           const data = signature.toData()
           const updatedPageData = [...pageData]; // copia la matriz actual
           updatedPageData[pageIndex] = data; // actualiza el elemento en el índice i
-          const trim =    signature?.getTrimmedCanvas() .toDataURL('image/png')
+          const trim =    signature?.toDataURL('image/png')
           const updatedTrimImages = [...trimImages]; // copia la matriz actual
           updatedTrimImages[pageIndex] = trim; // actualiza el elemento en el índice i
               setTrimImages(updatedTrimImages)
@@ -55,7 +53,7 @@ useEffect(() => {
           if(updatedPageData[pageIndex +1] === undefined){
             updatedPageData[pageIndex +1] = []
           }
-      const trim =    signature?.getTrimmedCanvas() .toDataURL('image/png')
+      const trim =    signature?.toDataURL('image/png')
       const updatedTrimImages = [...trimImages]; // copia la matriz actual
       updatedTrimImages[pageIndex] = trim; // actualiza el elemento en el índice i
           setTrimImages(updatedTrimImages)
