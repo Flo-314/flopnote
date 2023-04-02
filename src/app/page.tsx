@@ -13,11 +13,21 @@ const App = () => {
   const [drawingLineWidth, setDrawingLineWidth] = useState(2);
   const [pageData, setPageData] = useState<PageData[]>([])
   const [pageIndex, setPageIndex] = useState<number>(0);
+  const [trimedImages, setTrimedImages] = useState<string[]>([]);
 
 
 
   const fabricRef = useRef<fabric.Canvas | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+const trimImage = () => {
+    if (fabricRef.current) {
+      const trim = fabricRef.current.toDataURL({format:"image/png"});
+      const updatedTrimImages = [...trimedImages]; // copia la matriz actual
+      updatedTrimImages[pageIndex] = trim; // actualiza el elemento en el índice i
+      setTrimedImages(updatedTrimImages);
+    }
+}
   const initFabric = useCallback(() => {
     if (canvasRef.current) {
       fabricRef.current = new fabric.Canvas(canvasRef.current, { isDrawingMode: true, width: 700, height: 700, });
@@ -28,10 +38,12 @@ const App = () => {
       fabricRef.current.dispose();
     }
   },[])
+ 
   const handlePageMove = (pageToMove: number) => {
     if (fabricRef.current) {
       const actualPageData = fabricRef.current.toJSON();
-      
+      trimImage()
+
       setPageData((prevState) => {
         const updatedPageData = [...prevState];
         updatedPageData[pageIndex] = actualPageData;
@@ -40,6 +52,7 @@ const App = () => {
         }
         return updatedPageData;
       });
+
   
       setPageIndex(pageToMove < 0 ? 0 : pageToMove);
     }
@@ -108,6 +121,22 @@ const App = () => {
         }}>next page</button>
         <p className='text-8xl'>{pageIndex}</p>
         <canvas ref={canvasRef} />
+      </div>
+
+      
+      <div className="flex gap-4">
+        {trimedImages.map((page, index) => {
+          return (
+            <div
+              onClick={() => {
+                handlePageMove(index);
+              }}
+              key={index}
+            >
+              <img className="w-32  h-32 border-4 border-black" src={page} />
+            </div>
+          );
+        })}
       </div>
 
 
