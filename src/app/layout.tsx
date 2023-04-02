@@ -1,8 +1,10 @@
+import Head from 'next/head'
 import './globals.css'
 
 export const metadata = {
   title: 'FlopNote',
   description: 'p',
+  google: "notranslate"
 }
 
 export default function RootLayout({
@@ -12,6 +14,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Head>
+      </Head>
       <body>{children}</body>
     </html>
   )

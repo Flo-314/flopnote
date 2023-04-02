@@ -13,8 +13,11 @@ const App = () => {
   const [drawingLineWidth, setDrawingLineWidth] = useState(2);
   const [pageData, setPageData] = useState<PageData[]>([])
   const [pageIndex, setPageIndex] = useState<number>(0);
+  const [lightBox, setLightBox] = useState<boolean>(true);
+
   const [trimedImages, setTrimedImages] = useState<string[]>([]);
 
+  let animationInterval = useRef<any>(null);
 
 
   const fabricRef = useRef<fabric.Canvas | null>(null);
@@ -85,7 +88,10 @@ const trimImage = () => {
     }
   }, [pageIndex, pageData]);
 
+const animatePages = () => {
+  setPageIndex((pageIndex) => (pageIndex + 1) % pageData.length);
 
+}
 
   useEffect(() => {
     loadData()
@@ -120,8 +126,24 @@ const trimImage = () => {
           handlePageMove(pageIndex + 1)
         }}>next page</button>
         <p className='text-8xl'>{pageIndex}</p>
-        <canvas ref={canvasRef} />
+        
       </div>
+    
+      <div style={{ position: "relative" }}>
+  <canvas ref={canvasRef} />
+  {lightBox &&  !animationInterval.current && (
+    <img
+      src={trimedImages[pageIndex - 1]}
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        opacity: 0.3,
+        zIndex: -1,
+      }}
+    />
+  )}
+</div>
 
       
       <div className="flex gap-4">
@@ -138,8 +160,31 @@ const trimImage = () => {
           );
         })}
       </div>
+      <button
+        onClick={() => {
+          if(!animationInterval.current){ 
+            handlePageMove(0)
 
+          animationInterval.current = setInterval(() => {
+            animatePages();
+          }, 200); // cambie este valor para ajustar la velocidad de la animación
+        }}}
+      >
+        Play
+      </button>
 
+      <button
+        onClick={() => {
+          clearInterval(animationInterval.current);
+          animationInterval.current = null;
+        }}
+      >
+        Stop
+      </button>
+
+<button onClick={(() => {
+  setLightBox(!lightBox)
+})}>switch lightbox</button>
     </div>
 
   )
