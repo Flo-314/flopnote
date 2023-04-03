@@ -1,9 +1,9 @@
-import { useEffect, useCallback, MutableRefObject } from "react";
-import { fabric } from "fabric";
+import {useEffect, useCallback, MutableRefObject} from "react";
+import {fabric} from "fabric";
 
 export function useFabric(
   fabricRef: MutableRefObject<fabric.Canvas | null>,
-  canvasRef: MutableRefObject<HTMLCanvasElement | null>
+  canvasRef: MutableRefObject<HTMLCanvasElement | null>,
 ) {
   const initFabric = useCallback(() => {
     if (canvasRef.current) {
@@ -19,6 +19,7 @@ export function useFabric(
       fabricRef.current.dispose();
     }
   }, [fabricRef]);
+
   useEffect(() => {
     initFabric();
 

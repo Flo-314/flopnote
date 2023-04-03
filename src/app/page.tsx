@@ -1,13 +1,9 @@
-import React from 'react';
-import Canvas from './Canvas';
+import React from "react";
 
+import Canvas from "./Canvas";
 
 const Page = () => {
-
-return(
-  <Canvas></Canvas>
-)
+  return <Canvas />;
 };
 
 export default Page;
-

@@ -1,11 +1,5 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  MutableRefObject,
-} from "react";
-import { fabric } from "fabric";
+import {useState, useEffect, useRef, useCallback, MutableRefObject} from "react";
+import {fabric} from "fabric";
 
 type PageData = {
   version: string;
@@ -19,8 +13,9 @@ export function usePageData(fabricRef: MutableRefObject<fabric.Canvas | null>) {
   let animationInterval = useRef<number | null>(null);
   const trimImage = () => {
     if (fabricRef.current) {
-      const trim = fabricRef.current.toDataURL({ format: "image/png" });
+      const trim = fabricRef.current.toDataURL({format: "image/png"});
       const updatedTrimImages = [...trimedImages]; // copia la matriz actual
+
       updatedTrimImages[pageIndex] = trim; // actualiza el elemento en el índice i
       setTrimedImages(updatedTrimImages);
     }
@@ -28,14 +23,17 @@ export function usePageData(fabricRef: MutableRefObject<fabric.Canvas | null>) {
   const handlePageMove = (pageToMove: number) => {
     if (fabricRef.current) {
       const actualPageData = fabricRef.current.toJSON();
+
       trimImage();
 
       setPageData((prevState) => {
         const updatedPageData = [...prevState];
+
         updatedPageData[pageIndex] = actualPageData;
         if (!updatedPageData[pageIndex + 1]) {
-          updatedPageData[pageIndex + 1] = { version: "5.1", objects: [] };
+          updatedPageData[pageIndex + 1] = {version: "5.1", objects: []};
         }
+
         return updatedPageData;
       });
 
@@ -65,6 +63,7 @@ export function usePageData(fabricRef: MutableRefObject<fabric.Canvas | null>) {
       animationInterval.current = null;
     }
   };
+
   useEffect(() => {
     loadData();
   }, [loadData]);
